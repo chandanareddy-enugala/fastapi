@@ -6,6 +6,7 @@ from .database import engine, SessionLocal, get_db
 from . import utils
 from .routers import post,user,auth,vote
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 from app.config import Settings
 
@@ -46,3 +47,9 @@ app.include_router(vote.router)
 @app.get('/')
 def root():
     return {"message":"Hello World"}
+
+"""if __name__ == '__main__':
+    uvicorn.run(app, reload = True)"""
+    
+    
+    
