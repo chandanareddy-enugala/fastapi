@@ -15,17 +15,7 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
-    steps:
-      - name: Check environment variables
-        run: |
-          echo "Checking environment variables..."
-          [ -z "$DATABASE_HOSTNAME" ] && echo "DATABASE_HOSTNAME is not set" || echo "DATABASE_HOSTNAME is set"
-          [ -z "$DATABASE_PORT" ] && echo "DATABASE_PORT is not set" || echo "DATABASE_PORT is set"
-          [ -z "$DATABASE_PASSWORD" ] && echo "DATABASE_PASSWORD is not set" || echo "DATABASE_PASSWORD is set"
-          [ -z "$DATABASE_NAME" ] && echo "DATABASE_NAME is not set" || echo "DATABASE_NAME is set"
-          [ -z "$DATABASE_USERNAME" ] && echo "DATABASE_USERNAME is not set" || echo "DATABASE_USERNAME is set"
-          [ -z "$SECRET_KEY" ] && echo "SECRET_KEY is not set" || echo "SECRET_KEY is set"
-          [ -z "$ALGORITHM" ] && echo "ALGORITHM is not set" || echo "ALGORITHM is set"
+      
           
 
     services:
@@ -44,6 +34,16 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Check environment variables
+        run: |
+          echo "Checking environment variables..."
+          [ -z "$DATABASE_HOSTNAME" ] && echo "DATABASE_HOSTNAME is not set" || echo "DATABASE_HOSTNAME is set"
+          [ -z "$DATABASE_PORT" ] && echo "DATABASE_PORT is not set" || echo "DATABASE_PORT is set"
+          [ -z "$DATABASE_PASSWORD" ] && echo "DATABASE_PASSWORD is not set" || echo "DATABASE_PASSWORD is set"
+          [ -z "$DATABASE_NAME" ] && echo "DATABASE_NAME is not set" || echo "DATABASE_NAME is set"
+          [ -z "$DATABASE_USERNAME" ] && echo "DATABASE_USERNAME is not set" || echo "DATABASE_USERNAME is set"
+          [ -z "$SECRET_KEY" ] && echo "SECRET_KEY is not set" || echo "SECRET_KEY is set"
+          [ -z "$ALGORITHM" ] && echo "ALGORITHM is not set" || echo "ALGORITHM is set"
       - name: pulling git repo
         uses: actions/checkout@v2
       - name: Install python version 3.9
