@@ -6,6 +6,7 @@ from app.database import get_db
 from typing import Optional,List
 from app import ouath2
 from sqlalchemy import func
+from sqlalchemy import text
 
 
 router = APIRouter(
@@ -26,6 +27,7 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), get_cu
     print("1...............",get_current_user_id.id)
     print("2............",get_current_user_id.email)
     new_post =models.Post(owner_id = get_current_user_id.id,**post.dict())
+    print(new_post)
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -40,7 +42,15 @@ def get_posts(db: Session = Depends(get_db),get_current_user_id: int = Depends(o
     
     results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote,
                     models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).all()
-    print(results)
+    print('res.............',results)
+
+# Define your SQL for creating the view
+
+    # Execute the SQL to create the view
+
+    # for row in results:
+    #     post, vote_count = row
+    #     print(f"Post: {post.title}, Votes: {vote_count}")
     #cursor.execute("select * from posts")
     #posts = cursor.fetchall()
     #print(posts)
