@@ -34,16 +34,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Check environment variables
-        run: |
-          echo "Checking environment variables..."
-          [ -z "$DATABASE_HOSTNAME" ] && echo "DATABASE_HOSTNAME is not set" || echo "DATABASE_HOSTNAME is set"
-          [ -z "$DATABASE_PORT" ] && echo "DATABASE_PORT is not set" || echo "DATABASE_PORT is set"
-          [ -z "$DATABASE_PASSWORD" ] && echo "DATABASE_PASSWORD is not set" || echo "DATABASE_PASSWORD is set"
-          [ -z "$DATABASE_NAME" ] && echo "DATABASE_NAME is not set" || echo "DATABASE_NAME is set"
-          [ -z "$DATABASE_USERNAME" ] && echo "DATABASE_USERNAME is not set" || echo "DATABASE_USERNAME is set"
-          [ -z "$SECRET_KEY" ] && echo "SECRET_KEY is not set" || echo "SECRET_KEY is set"
-          [ -z "$ALGORITHM" ] && echo "ALGORITHM is not set" || echo "ALGORITHM is set"
       - name: pulling git repo
         uses: actions/checkout@v2
       - name: Install python version 3.9
@@ -58,5 +48,25 @@ jobs:
         run: pip install pytest
       - name: check pytest installed
         run: pytest -vv
-          
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/fastapi:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
   
